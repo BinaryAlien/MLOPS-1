@@ -1,0 +1,38 @@
+The goal of this mini project is to deploy a web service running a machine learning model with docker.
+
+In case you need to work on the basics of docker, go make the docker sessions on nowledgeable.
+
+If you are not confortable with web developpement you can do the session web backend basics
+
+Level 0  (on your local machine)
+
+Make sure you have a FastAPI backend that have a /predict endpoint which let use the  house price predictions from the previous model.
+
+Test the model with your favorite http client (postman, hugo, requests python library, etc.)
+
+Level 1 (on your local machine)
+
+You want now to run the backend inside a docker container.
+For that create a Dockerfile to create your custom Docker image
+
+First run the container with raw docker cli commands.
+
+Then create a docker-compose file
+
+Level 2  -  Deploy the container in a cloud virtual machine
+
+We have setup a Virtual machine for you.
+
+    create a folder with your initial in the /home/ubuntu folder
+    create a folder with
+
+Level 3 - automatically build and deploy the container using a CD pipeline using gitlab or github action
+
+Using pipelines, make sure that when you push an update of your backend in your favirote git server, a pipeline is triggered and the model is update in production.
+
+Level 4 - adapt the process to a more interesting model
+
+Adapt the previous work to deploy in production a more interesting model :
+
+    it can be any model you trained in another course (image classification, cell segmentation, etc.)
+    A T5  or a Bert model from hugging face
