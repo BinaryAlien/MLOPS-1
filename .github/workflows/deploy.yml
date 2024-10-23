@@ -1,0 +1,41 @@
+name: "Deploy Docker image"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t ebepita/mlops-1:latest .
+
+      - name: Push Docker image
+        run: |
+          docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin <<< "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}"
+          docker push ebepita/mlops-1:latest
+
+      - name: Write SSH private key
+        run: |
+          mkdir -p ~/.ssh
+          touch ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+
+      - name: Pull Docker image on remote server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_SERVER_USERNAME }}@${{ secrets.REMOTE_SERVER_ADDRESS }} << 'EOF'
+          docker pull ebepita/mlops-1:latest
+          EOF
+
+      - name: Run Docker container on remote server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.REMOTE_SERVER_USERNAME }}@${{ secrets.REMOTE_SERVER_ADDRESS }} << 'EOF'
+          docker rm -f ebepita
+          docker run --rm --name ebepita -d -p8715:8715 ebepita/mlops-1:latest
+          EOF
