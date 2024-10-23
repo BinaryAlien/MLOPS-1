@@ -1,3 +1,5 @@
 Flask
 joblib
 scikit-learn
+torch
+transformers
